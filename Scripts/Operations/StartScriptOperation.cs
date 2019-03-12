@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Jtfer.Ecp.Unity
 {
+    [EcpInject]
     class StartScriptOperation : IInitOperation
     {
         readonly ScriptContainer _scripts = null;

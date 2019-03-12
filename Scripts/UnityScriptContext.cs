@@ -17,7 +17,10 @@ namespace Jtfer.Ecp.Unity
             var scriptContainer = AddContainer<ScriptContainer>();
             var sceneScripts = UnityEngine.Object.FindObjectsOfType<UnityScript>().OrderBy(q => q.Priority).ToArray();
             foreach (var s in sceneScripts)
+            {
+                AddContainer(s);
                 scriptContainer.AddScript(s);
+            }  
         }
 
         protected override void AddOperations(Pipeline pipeline)

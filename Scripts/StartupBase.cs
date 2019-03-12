@@ -35,8 +35,9 @@ namespace Jtfer.Ecp.Unity
             _fixedUpdate = _scriptContext.CreateOperations("FixedUpdateScripts", new FixedUpdateOperation());
             _lateUpdate = _scriptContext.CreateOperations("LateUpdateScripts", new LateUpdateOperation());
 
-            _scriptContext.Initialize(_awake);
-            _scriptContext.Initialize(_start);
+            _scriptContext.Initialize();
+            //_scriptContext.Initialize(_awake);
+            //_scriptContext.Initialize(_start);
         }
 
         private void Update()

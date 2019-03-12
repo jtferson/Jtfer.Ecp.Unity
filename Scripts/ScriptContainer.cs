@@ -8,14 +8,11 @@ namespace Jtfer.Ecp.Unity
 {
     public class ScriptContainer : IContainer
     {
-        readonly UnityScriptContext _context = null;
-
         UnityScript[] _containers = new UnityScript[8];
         int _containersCount;
 
         public void AddScript(UnityScript script)
         {
-            _context.AddContainer(script);
             if (_containersCount == _containers.Length)
             {
                 Array.Resize(ref _containers, _containersCount << 1);
@@ -25,32 +22,32 @@ namespace Jtfer.Ecp.Unity
 
         public void Update()
         {
-            foreach(var container in _containers)
-                container.CustomUpdate();
+            for(int i = 0, iMax = _containersCount; i < iMax; i++)
+                _containers[i].CustomUpdate();               
         }
 
         public void FixedUpdate()
         {
-            foreach (var container in _containers)
-                container.CustomFixedUpdate();
+            for (int i = 0, iMax = _containersCount; i < iMax; i++)
+                _containers[i].CustomFixedUpdate();
         }
 
         public void LateUpdate()
         {
-            foreach (var container in _containers)
-                container.CustomLateUpdate();
+            for (int i = 0, iMax = _containersCount; i < iMax; i++)
+                _containers[i].CustomLateUpdate();
         }
 
         public void Awake()
         {
-            foreach (var container in _containers)
-                container.CustomAwake();
+            for (int i = 0, iMax = _containersCount; i < iMax; i++)
+                _containers[i].CustomAwake();
         }
 
         public void Start()
         {
-            foreach (var container in _containers)
-                container.CustomStart();
+            for (int i = 0, iMax = _containersCount; i < iMax; i++)
+                _containers[i].CustomStart();
         }
     }
 }
