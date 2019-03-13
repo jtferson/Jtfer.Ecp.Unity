@@ -44,17 +44,17 @@ namespace Jtfer.Ecp.Unity
 
         protected abstract void DefineContexts();
 
-        private void Update()
+        public virtual void Update()
         {
             _scriptContext.Update(_update);
         }
 
-        private void FixedUpdate()
+        public virtual void FixedUpdate()
         {
             _scriptContext.Update(_fixedUpdate);
         }
 
-        private void LateUpdate()
+        public virtual void LateUpdate()
         {
             _scriptContext.Update(_lateUpdate);
         }
