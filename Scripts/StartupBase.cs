@@ -9,7 +9,8 @@ namespace Jtfer.Ecp.Unity
 {
     public abstract class StartupBase : MonoBehaviour
     {
-        protected Domain _domain;
+        private Domain _domainInstance;
+        protected Domain _domain => _domainInstance = _domainInstance ?? new Domain();
         UnityScriptContext _scriptContext;
         Pipeline _awake;
         Pipeline _start;
@@ -20,7 +21,6 @@ namespace Jtfer.Ecp.Unity
 
         private void OnEnable()
         {
-            _domain = new Domain();
             _scriptContext = new UnityScriptContext(_domain, true, "ScriptContext");
 
 #if UNITY_EDITOR
