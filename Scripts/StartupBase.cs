@@ -9,7 +9,7 @@ namespace Jtfer.Ecp.Unity
 {
     public abstract class StartupBase : MonoBehaviour
     {
-        Domain _domain;
+        protected Domain _domain;
         UnityScriptContext _scriptContext;
         Pipeline _awake;
         Pipeline _start;
@@ -38,6 +38,8 @@ namespace Jtfer.Ecp.Unity
             _scriptContext.Initialize();
             //_scriptContext.Initialize(_awake);
             //_scriptContext.Initialize(_start);
+
+
         }
 
         private void Update()
