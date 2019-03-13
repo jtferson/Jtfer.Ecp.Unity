@@ -19,7 +19,7 @@ namespace Jtfer.Ecp.Unity
         Pipeline _lateUpdate;
 
 
-        private void OnEnable()
+        public virtual void OnEnable()
         {
             _scriptContext = new UnityScriptContext(_domain, true, "ScriptContext");
 
@@ -39,8 +39,10 @@ namespace Jtfer.Ecp.Unity
             //_scriptContext.Initialize(_awake);
             //_scriptContext.Initialize(_start);
 
-
+            DefineContexts();
         }
+
+        protected abstract void DefineContexts();
 
         private void Update()
         {
