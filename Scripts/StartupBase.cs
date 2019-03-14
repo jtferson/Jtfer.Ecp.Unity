@@ -35,14 +35,15 @@ namespace Jtfer.Ecp.Unity
             _fixedUpdate = _scriptContext.CreateOperations("FixedUpdateScripts", new FixedUpdateOperation());
             _lateUpdate = _scriptContext.CreateOperations("LateUpdateScripts", new LateUpdateOperation());
 
-            _scriptContext.Initialize();
+
             //_scriptContext.Initialize(_awake);
             //_scriptContext.Initialize(_start);
+            DefineContexts(_scriptContext);
 
-            DefineContexts();
+            _scriptContext.Initialize();
         }
 
-        protected abstract void DefineContexts();
+        protected abstract void DefineContexts(PipelineContext scriptContext);
 
         public virtual void Update()
         {
