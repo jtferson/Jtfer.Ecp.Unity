@@ -10,4 +10,17 @@ namespace Jtfer.Ecp.Unity
     {
         string Name { get; }
     }
+
+    public abstract class SceneTypeBase<T> : ISceneType
+        where T : ISceneType
+    {
+        public abstract string Name { get; }
+        private Type SceneType => typeof(T);
+
+        public bool Is<TScene>()
+            where TScene : ISceneType
+        {
+            return SceneType == typeof(TScene);
+        }
+    }
 }
