@@ -74,13 +74,15 @@ namespace Jtfer.Ecp.Unity
         {
             context.CreateOperations();
             var defaultPipeline = context.GetDefaultPipeline();
-            var operationList = new IUpdateOperation[1];
+            var operationList = new IUpdateOperation[0];
             defaultPipeline.GetRunSystems(ref operationList);
             var fixedUpdateOperations = operationList.Where(q => q is IFixedUpdateOperation).ToArray();
-            _fixedUpdatePipelines.Add(new CustomPipeline(context, context.CreateOperations("FixedUpdate", fixedUpdateOperations)));
-
+            if(fixedUpdateOperations.Length > 0)
+                _fixedUpdatePipelines.Add(new CustomPipeline(context, context.CreateOperations("FixedUpdate", fixedUpdateOperations)));
+           
             var lateUpdateOperations = operationList.Where(q => q is ILateUpdateOperation).ToArray();
-            _lateUpdatePipelines.Add(new CustomPipeline(context, context.CreateOperations("LateUpdate", lateUpdateOperations)));
+            if (lateUpdateOperations.Length > 0)
+                _lateUpdatePipelines.Add(new CustomPipeline(context, context.CreateOperations("LateUpdate", lateUpdateOperations)));
 
             defaultPipeline.RemoveRunSystems(fixedUpdateOperations.Concat(lateUpdateOperations).ToArray());
             _defaultPipelines.Add(new CustomPipeline(context, defaultPipeline));
