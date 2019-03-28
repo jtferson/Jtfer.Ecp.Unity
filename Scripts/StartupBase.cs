@@ -23,6 +23,7 @@ namespace Jtfer.Ecp.Unity
         private Domain _domainInstance;
         protected Domain _domain => _domainInstance = _domainInstance ?? new Domain();
 
+        private List<PipelineContext> _contexts = new List<PipelineContext>();
         private List<CustomPipeline> _defaultPipelines = new List<CustomPipeline>();
         private List<CustomPipeline> _fixedUpdatePipelines = new List<CustomPipeline>();
         private List<CustomPipeline> _lateUpdatePipelines = new List<CustomPipeline>();
@@ -41,30 +42,14 @@ namespace Jtfer.Ecp.Unity
             AddContext(scriptContext);
             DefineContexts();
 
-            for (var i = 0; i < _defaultPipelines.Count; i++)
+            for (var i = 0; i < _contexts.Count; i++)
             {
-                _defaultPipelines[i].Context.Prepare();
-            }
-            for (var i = 0; i < _fixedUpdatePipelines.Count; i++)
-            {
-                _fixedUpdatePipelines[i].Context.Prepare();
-            }
-            for (var i = 0; i < _lateUpdatePipelines.Count; i++)
-            {
-                _lateUpdatePipelines[i].Context.Prepare();
+                _contexts[i].Prepare();
             }
 
-            for (var i = 0; i < _defaultPipelines.Count; i++)
+            for (var i = 0; i < _contexts.Count; i++)
             {
-                _defaultPipelines[i].Context.Initialize();
-            }
-            for (var i = 0; i < _fixedUpdatePipelines.Count; i++)
-            {
-                _fixedUpdatePipelines[i].Context.Initialize();
-            }
-            for (var i = 0; i < _lateUpdatePipelines.Count; i++)
-            {
-                _lateUpdatePipelines[i].Context.Initialize();
+                _contexts[i].Initialize();
             }
         }
 
@@ -86,6 +71,8 @@ namespace Jtfer.Ecp.Unity
 
             defaultPipeline.RemoveRunSystems(fixedUpdateOperations.Concat(lateUpdateOperations).ToArray());
             _defaultPipelines.Add(new CustomPipeline(context, defaultPipeline));
+
+            _contexts.Add(context);
         }
 
         public virtual void Update()
