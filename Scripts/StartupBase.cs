@@ -104,6 +104,7 @@ namespace Jtfer.Ecp.Unity
             {
                 _defaultPipelines[i].Context.Update(_defaultPipelines[i].Pipeline);
             }
+            _domain.RemoveOneFrameComponents();
         }
 
         public virtual void FixedUpdate()
