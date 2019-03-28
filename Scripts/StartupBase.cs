@@ -74,7 +74,7 @@ namespace Jtfer.Ecp.Unity
         {
             context.CreateOperations();
             var defaultPipeline = context.GetDefaultPipeline();
-            var operationList = new IUpdateOperation[0];
+            var operationList = new IUpdateOperation[1];
             defaultPipeline.GetRunSystems(ref operationList);
             var fixedUpdateOperations = operationList.Where(q => q is IFixedUpdateOperation).ToArray();
             _fixedUpdatePipelines.Add(new CustomPipeline(context, context.CreateOperations("FixedUpdate", fixedUpdateOperations)));
