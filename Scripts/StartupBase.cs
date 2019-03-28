@@ -43,19 +43,6 @@ namespace Jtfer.Ecp.Unity
 
             for (var i = 0; i < _defaultPipelines.Count; i++)
             {
-                _defaultPipelines[i].Context.CreateOperations();
-            }
-            for (var i = 0; i < _fixedUpdatePipelines.Count; i++)
-            {
-                _fixedUpdatePipelines[i].Context.CreateOperations();
-            }
-            for (var i = 0; i < _lateUpdatePipelines.Count; i++)
-            {
-                _lateUpdatePipelines[i].Context.CreateOperations();
-            }
-
-            for (var i = 0; i < _defaultPipelines.Count; i++)
-            {
                 _defaultPipelines[i].Context.Prepare();
             }
             for (var i = 0; i < _fixedUpdatePipelines.Count; i++)
@@ -85,6 +72,7 @@ namespace Jtfer.Ecp.Unity
 
         protected void AddContext(PipelineContext context)
         {
+            context.CreateOperations();
             var defaultPipeline = context.GetDefaultPipeline();
             var operationList = new IUpdateOperation[0];
             defaultPipeline.GetRunSystems(ref operationList);
