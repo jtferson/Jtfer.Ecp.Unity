@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Jtfer.Ecp.Unity
 {
     [EcpInject]
-    class FixedUpdateOperation : IUpdateOperation
+    class FixedUpdateOperation : IFixedUpdateOperation
     {
         readonly ScriptContainer _scripts = null;
         public void Update()

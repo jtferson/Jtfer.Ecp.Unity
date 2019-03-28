@@ -7,57 +7,106 @@ using UnityEngine;
 
 namespace Jtfer.Ecp.Unity
 {
+    public struct CustomPipeline
+    {
+        public PipelineContext Context { get; private set; }
+        public Pipeline Pipeline { get; private set; }
+
+        public CustomPipeline(PipelineContext context, Pipeline pipeline)
+        {
+            Context = context;
+            Pipeline = pipeline;
+        }
+    }
     public abstract class StartupBase : MonoBehaviour
     {
         private Domain _domainInstance;
         protected Domain _domain => _domainInstance = _domainInstance ?? new Domain();
-        UnityScriptContext _scriptContext;
-        Pipeline _awake;
-        Pipeline _start;
-        Pipeline _update;
-        Pipeline _fixedUpdate;
-        Pipeline _lateUpdate;
+
+        private List<CustomPipeline> _defaultPipelines = new List<CustomPipeline>();
+        private List<CustomPipeline> _fixedUpdatePipelines = new List<CustomPipeline>();
+        private List<CustomPipeline> _lateUpdatePipelines = new List<CustomPipeline>();
+
 
 
         public virtual void OnEnable()
         {
-            _scriptContext = new UnityScriptContext(_domain, true, "ScriptContext");
+            var scriptContext = new UnityScriptContext(_domain, true, "ScriptContext");
 
 #if UNITY_EDITOR
             SupervisorObserver.Create(_domain.GetSupervisor());
             //TODO
             //PipelineObserver.Create(_systems);
 #endif
+            AddContext(scriptContext);
+            DefineContexts();
 
-            _awake = _scriptContext.CreateOperations("AwakeScripts", new AwakeScriptOperation());
-            _start = _scriptContext.CreateOperations("StartScripts", new StartScriptOperation());
-            _update = _scriptContext.CreateOperations("UpdateScripts", new UpdateScriptOperation());
-            _fixedUpdate = _scriptContext.CreateOperations("FixedUpdateScripts", new FixedUpdateOperation());
-            _lateUpdate = _scriptContext.CreateOperations("LateUpdateScripts", new LateUpdateOperation());
+            for (var i = 0; i < _defaultPipelines.Count; i++)
+            {
+                _defaultPipelines[i].Context.Prepare();
+            }
+            for (var i = 0; i < _fixedUpdatePipelines.Count; i++)
+            {
+                _fixedUpdatePipelines[i].Context.Prepare();
+            }
+            for (var i = 0; i < _lateUpdatePipelines.Count; i++)
+            {
+                _lateUpdatePipelines[i].Context.Prepare();
+            }
 
-
-            //_scriptContext.Initialize(_awake);
-            //_scriptContext.Initialize(_start);
-            DefineContexts(_scriptContext);
-
-            _scriptContext.Initialize();
+            for (var i = 0; i < _defaultPipelines.Count; i++)
+            {
+                _defaultPipelines[i].Context.Initialize();
+            }
+            for (var i = 0; i < _fixedUpdatePipelines.Count; i++)
+            {
+                _fixedUpdatePipelines[i].Context.Initialize();
+            }
+            for (var i = 0; i < _lateUpdatePipelines.Count; i++)
+            {
+                _lateUpdatePipelines[i].Context.Initialize();
+            }
         }
 
-        protected abstract void DefineContexts(PipelineContext scriptContext);
+        protected abstract void DefineContexts();
+
+        protected void AddContext(PipelineContext context)
+        {
+            var defaultPipeline = context.GetDefaultPipeline();
+            var operationList = new IUpdateOperation[0];
+            defaultPipeline.GetRunSystems(ref operationList);
+            var fixedUpdateOperations = operationList.Where(q => q is IFixedUpdateOperation).ToArray();
+            _fixedUpdatePipelines.Add(new CustomPipeline(context, context.CreateOperations("FixedUpdate", fixedUpdateOperations)));
+
+            var lateUpdateOperations = operationList.Where(q => q is ILateUpdateOperation).ToArray();
+            _lateUpdatePipelines.Add(new CustomPipeline(context, context.CreateOperations("LateUpdate", lateUpdateOperations)));
+
+            defaultPipeline.RemoveRunSystems(fixedUpdateOperations.Concat(lateUpdateOperations).ToArray());
+            _defaultPipelines.Add(new CustomPipeline(context, defaultPipeline));
+        }
 
         public virtual void Update()
         {
-            _scriptContext.Update(_update);
+            for(var i = 0; i < _defaultPipelines.Count; i++)
+            {
+                _defaultPipelines[i].Context.Update(_defaultPipelines[i].Pipeline);
+            }
         }
 
         public virtual void FixedUpdate()
         {
-            _scriptContext.Update(_fixedUpdate);
+            for (var i = 0; i < _fixedUpdatePipelines.Count; i++)
+            {
+                _fixedUpdatePipelines[i].Context.Update(_fixedUpdatePipelines[i].Pipeline);
+            }
         }
 
         public virtual void LateUpdate()
         {
-            _scriptContext.Update(_lateUpdate);
+            for (var i = 0; i < _lateUpdatePipelines.Count; i++)
+            {
+                _lateUpdatePipelines[i].Context.Update(_lateUpdatePipelines[i].Pipeline);
+            }
         }
     }
 }

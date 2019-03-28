@@ -25,6 +25,12 @@ namespace Jtfer.Ecp.Unity
 
         protected override void AddOperations(Pipeline pipeline)
         {
+            pipeline
+                .Add(new AwakeScriptOperation())
+                .Add(new StartScriptOperation())
+                .Add(new UpdateScriptOperation())
+                .Add(new FixedUpdateOperation())
+                .Add(new LateUpdateOperation());
         }
     }
 }
