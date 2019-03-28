@@ -9,6 +9,7 @@ namespace Jtfer.Ecp.Unity
     public interface ISceneType
     {
         string Name { get; }
+        bool Is<TScene>() where TScene : ISceneType;
     }
 
     public abstract class SceneTypeBase<T> : ISceneType
