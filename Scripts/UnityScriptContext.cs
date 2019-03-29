@@ -13,7 +13,7 @@ namespace Jtfer.Ecp.Unity
         {
         }
 
-        public void AddAndPrepareContainer(UnityScript unityScript)
+        public void AddAndPrepareScript(UnityScript unityScript)
         {
             AddAndPrepare(unityScript);
             scriptContainer.AddScript(unityScript);
