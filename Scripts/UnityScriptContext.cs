@@ -18,6 +18,7 @@ namespace Jtfer.Ecp.Unity
             var sceneScripts = UnityEngine.Object.FindObjectsOfType<UnityScript>().OrderBy(q => q.Priority).ToArray();
             foreach (var s in sceneScripts)
             {
+                UnityEngine.Debug.Log(s.GetType().Name);
                 AddContainer(s);
                 scriptContainer.AddScript(s);
             }  
