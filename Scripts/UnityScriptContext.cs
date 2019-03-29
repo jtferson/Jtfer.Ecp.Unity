@@ -8,21 +8,29 @@ namespace Jtfer.Ecp.Unity
 {
     public class UnityScriptContext : PipelineContext
     {
+        private ScriptContainer scriptContainer;
         public UnityScriptContext(Domain domain, bool isActive = true, string name = null) : base(domain, isActive, name)
         {
         }
 
+        public void AddContainer(UnityScript unityScript)
+        {
+            AddAndPrepare(unityScript);
+            scriptContainer.AddScript(unityScript);
+        }
+
         protected override void AddContainers()
         {
-            var scriptContainer = AddContainer<ScriptContainer>();
+            scriptContainer = AddContainer<ScriptContainer>();
             var sceneScripts = UnityEngine.Object.FindObjectsOfType<UnityScript>().OrderBy(q => q.Priority).ToArray();
             foreach (var s in sceneScripts)
             {
-                UnityEngine.Debug.Log(s.GetType().Name);
                 AddContainer(s);
                 scriptContainer.AddScript(s);
             }  
         }
+
+
 
         protected override void AddOperations(Pipeline pipeline)
         {
